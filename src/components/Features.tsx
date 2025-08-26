@@ -110,109 +110,107 @@ export function Features() {
   ];
 
   return (
-    <section className="py-24 px-6">
+    <section className="py-24 px-6 bg-background">
       <div className="max-w-7xl mx-auto space-y-16">
         {/* Section header */}
-        <div className="text-center space-y-6">
-          <Badge variant="outline" className="glass border-primary/30 text-primary font-semibold px-4 py-2">
-            <Sparkles className="w-4 h-4 mr-2" />
-            Powerful Features
-          </Badge>
+        <div className="text-center space-y-8">
+          <div className="bg-primary text-primary-foreground brutal-border brutal-shadow px-6 py-3 inline-block transform rotate-2">
+            <div className="flex items-center gap-3 text-sm font-black uppercase">
+              <Sparkles className="w-5 h-5" />
+              POWERFUL FEATURES
+            </div>
+          </div>
           
-          <h2 className="text-4xl md:text-6xl font-black">
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Everything You Need
-            </span>
+          <h2 className="text-4xl md:text-7xl font-black uppercase leading-none">
+            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-6 py-4 mb-4 transform -rotate-1 inline-block">
+              EVERYTHING YOU NEED
+            </div>
             <br />
-            <span className="text-foreground">To Simplify Content</span>
+            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-6 py-4 transform rotate-1 inline-block">
+              TO SIMPLIFY CONTENT
+            </div>
           </h2>
           
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Our advanced AI technology transforms how you consume and interact with digital content,
-            making complex information accessible and actionable.
-          </p>
+          <div className="bg-muted brutal-border px-8 py-6 max-w-4xl mx-auto">
+            <p className="text-lg font-bold uppercase">
+              OUR ADVANCED AI TECHNOLOGY TRANSFORMS HOW YOU CONSUME AND INTERACT WITH DIGITAL CONTENT,
+              MAKING COMPLEX INFORMATION ACCESSIBLE AND ACTIONABLE.
+            </p>
+          </div>
         </div>
 
         {/* Transformation modes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {transformationModes.map((mode, index) => (
-            <Card key={index} className="glass border-white/10 hover:shadow-glow transition-all duration-300 group cursor-pointer">
-              <CardHeader className="text-center pb-4">
-                <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${mode.gradient} p-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <mode.icon className="w-full h-full text-white" />
-                </div>
-                <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                  {mode.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center leading-relaxed">
-                  {mode.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div key={index} className="bg-background brutal-border brutal-shadow hover:brutal-shadow-lg transition-all duration-100 p-6 text-center cursor-pointer group hover:-translate-y-2">
+              <div className="bg-secondary brutal-border p-6 mb-6 mx-auto w-fit group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                <mode.icon className="w-12 h-12" />
+              </div>
+              <h3 className="font-black uppercase mb-3 text-lg group-hover:text-primary transition-colors">
+                {mode.title}
+              </h3>
+              <p className="text-sm font-bold uppercase text-muted-foreground leading-tight">
+                {mode.description}
+              </p>
+            </div>
           ))}
         </div>
 
         {/* Feature grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
-            <Card key={index} className="glass border-white/10 hover:shadow-glow transition-all duration-300 group">
-              <CardHeader>
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`p-3 rounded-xl bg-gradient-to-br from-muted to-muted/50 group-hover:shadow-glow transition-all duration-300`}>
-                    <feature.icon className={`w-6 h-6 ${feature.color}`} />
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {feature.badge}
-                  </Badge>
+            <div key={index} className="bg-background brutal-border brutal-shadow hover:brutal-shadow-lg transition-all duration-100 p-6 group hover:-translate-y-1">
+              <div className="flex items-start justify-between mb-6">
+                <div className="bg-muted brutal-border p-4 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-100">
+                  <feature.icon className="w-8 h-8" />
                 </div>
-                <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                  {feature.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="leading-relaxed">
-                  {feature.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
+                <div className="bg-secondary text-secondary-foreground brutal-border px-3 py-1 text-xs font-black uppercase">
+                  {feature.badge}
+                </div>
+              </div>
+              <h3 className="text-xl font-black uppercase mb-4 group-hover:text-primary transition-colors">
+                {feature.title}
+              </h3>
+              <p className="text-sm font-bold leading-relaxed text-muted-foreground">
+                {feature.description}
+              </p>
+            </div>
           ))}
         </div>
 
         {/* Stats section */}
-        <div className="glass rounded-3xl p-8 md:p-12">
+        <div className="bg-background brutal-border-thick brutal-shadow-lg p-8 md:p-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="text-4xl md:text-5xl font-black bg-gradient-primary bg-clip-text text-transparent">
+            <div className="space-y-3">
+              <div className="text-5xl md:text-6xl font-black text-primary">
                 10M+
               </div>
-              <div className="text-sm text-muted-foreground font-medium">
-                Content Pieces Transformed
+              <div className="text-sm font-black uppercase text-muted-foreground">
+                CONTENT PIECES TRANSFORMED
               </div>
             </div>
-            <div className="space-y-2">
-              <div className="text-4xl md:text-5xl font-black bg-gradient-secondary bg-clip-text text-transparent">
+            <div className="space-y-3">
+              <div className="text-5xl md:text-6xl font-black text-secondary">
                 50+
               </div>
-              <div className="text-sm text-muted-foreground font-medium">
-                Languages Supported
+              <div className="text-sm font-black uppercase text-muted-foreground">
+                LANGUAGES SUPPORTED
               </div>
             </div>
-            <div className="space-y-2">
-              <div className="text-4xl md:text-5xl font-black bg-gradient-primary bg-clip-text text-transparent">
+            <div className="space-y-3">
+              <div className="text-5xl md:text-6xl font-black text-primary">
                 95%
               </div>
-              <div className="text-sm text-muted-foreground font-medium">
-                Accuracy Rate
+              <div className="text-sm font-black uppercase text-muted-foreground">
+                ACCURACY RATE
               </div>
             </div>
-            <div className="space-y-2">
-              <div className="text-4xl md:text-5xl font-black bg-gradient-secondary bg-clip-text text-transparent">
+            <div className="space-y-3">
+              <div className="text-5xl md:text-6xl font-black text-secondary">
                 2s
               </div>
-              <div className="text-sm text-muted-foreground font-medium">
-                Average Processing Time
+              <div className="text-sm font-black uppercase text-muted-foreground">
+                AVERAGE PROCESSING TIME
               </div>
             </div>
           </div>

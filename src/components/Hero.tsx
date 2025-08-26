@@ -52,161 +52,165 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Background with overlay */}
-      <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url(${heroBackground})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/90" />
-      </div>
+    <section className="relative min-h-screen flex flex-col items-center justify-center py-24 px-6">
+      {/* Brutal background pattern */}
+      <div className="absolute inset-0 brutal-pattern" />
+      <div className="absolute inset-0 brutal-dots" />
 
-      {/* Floating elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-primary rounded-full opacity-20 animate-float" />
-      <div className="absolute top-40 right-20 w-12 h-12 bg-gradient-secondary rounded-full opacity-30 animate-float" style={{ animationDelay: '1s' }} />
-      <div className="absolute bottom-40 left-20 w-16 h-16 bg-gradient-primary rounded-full opacity-25 animate-float" style={{ animationDelay: '2s' }} />
+      {/* Floating brutal elements */}
+      <div className="absolute top-20 left-10 w-20 h-20 bg-primary brutal-border brutal-shadow rotate-12 animate-brutal-bounce" />
+      <div className="absolute top-40 right-20 w-16 h-16 bg-secondary brutal-border brutal-shadow -rotate-12 animate-brutal-shake" />
+      <div className="absolute bottom-40 left-20 w-24 h-12 bg-accent brutal-border brutal-shadow rotate-45" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-12">
-        {/* Main headline */}
-        <div className="space-y-6">
-          <Badge variant="outline" className="glass border-primary/30 text-primary font-semibold px-4 py-2">
-            <Sparkles className="w-4 h-4 mr-2" />
-            AI-Powered Content Transformation
-          </Badge>
+      <div className="relative z-10 max-w-6xl mx-auto text-center space-y-12">
+        {/* Brutal headline */}
+        <div className="space-y-8">
+          <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-8 py-4 inline-block transform -rotate-2">
+            <div className="flex items-center gap-3 text-lg font-black uppercase">
+              <Sparkles className="w-6 h-6" />
+              AI-POWERED CONTENT DESTROYER
+            </div>
+          </div>
           
-          <h1 className="text-6xl md:text-8xl font-black tracking-tight">
-            <span className="bg-gradient-hero bg-clip-text text-transparent animate-gradient">
+          <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-none">
+            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-8 py-4 mb-4 transform rotate-1">
               MAKE
-            </span>
-            <br />
-            <span className="text-foreground">COMPLEX</span>
-            <br />
-            <span className="bg-gradient-secondary bg-clip-text text-transparent animate-gradient">
+            </div>
+            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-8 py-4 mb-4 transform -rotate-1">
+              COMPLEX
+            </div>
+            <div className="bg-secondary text-secondary-foreground brutal-border brutal-shadow-lg px-8 py-4 mb-4 transform rotate-2">
               SIMPLE
-            </span>
-            <br />
-            <span className="text-foreground">AGAIN.</span>
+            </div>
+            <div className="bg-accent text-accent-foreground brutal-border brutal-shadow-lg px-8 py-4 transform -rotate-1">
+              AGAIN.
+            </div>
           </h1>
 
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Transform any web content into your perfect view. Convert articles, papers, 
-            documents, and YouTube videos into summaries, mindmaps, podcasts, and more.
-          </p>
-        </div>
-
-        {/* Content transformation interface */}
-        <div className="max-w-4xl mx-auto space-y-8">
-          <Tabs defaultValue="url" className="w-full">
-            <TabsList className="glass border-white/10 p-1">
-              <TabsTrigger value="url" className="flex items-center gap-2">
-                <Link2 className="w-4 h-4" />
-                URL
-              </TabsTrigger>
-              <TabsTrigger value="text" className="flex items-center gap-2">
-                <FileText className="w-4 h-4" />
-                TEXT
-              </TabsTrigger>
-              <TabsTrigger value="video" className="flex items-center gap-2">
-                <PlayCircle className="w-4 h-4" />
-                VIDEO
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="url" className="space-y-6">
-              <div className="glass rounded-2xl p-8 space-y-6">
-                <h3 className="text-2xl font-bold text-center">Paste any URL to transform</h3>
-                
-                <div className="flex gap-4">
-                  <div className="flex-1 relative">
-                    <Input
-                      type="url"
-                      placeholder="https://example.com/article or https://youtube.com/watch?v=..."
-                      value={inputUrl}
-                      onChange={(e) => setInputUrl(e.target.value)}
-                      className="h-14 text-lg bg-muted/50 border-border/50 rounded-xl pl-12"
-                    />
-                    <Link2 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                  </div>
-                  <Button 
-                    variant="hero" 
-                    size="lg" 
-                    onClick={handleTransform}
-                    disabled={!inputUrl.trim() || isTransforming}
-                    className="h-14 px-8 text-lg"
-                  >
-                    {isTransforming ? (
-                      <>
-                        <Zap className="w-5 h-5 mr-2 animate-spin" />
-                        Transforming...
-                      </>
-                    ) : (
-                      <>
-                        <Zap className="w-5 h-5 mr-2" />
-                        Transform Content
-                      </>
-                    )}
-                  </Button>
-                </div>
-
-                <p className="text-sm text-muted-foreground text-center">
-                  We'll automatically extract content from web pages and YouTube videos
-                </p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="text" className="space-y-6">
-              <div className="glass rounded-2xl p-8">
-                <h3 className="text-2xl font-bold text-center mb-6">Paste or type your content</h3>
-                <textarea
-                  placeholder="Paste your article, research paper, or any text content here..."
-                  className="w-full h-40 p-4 bg-muted/50 border border-border/50 rounded-xl resize-none"
-                />
-                <Button variant="hero" size="lg" className="w-full mt-4">
-                  <Zap className="w-5 h-5 mr-2" />
-                  Transform Text
-                </Button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="video" className="space-y-6">
-              <div className="glass rounded-2xl p-8">
-                <h3 className="text-2xl font-bold text-center mb-6">Upload or link to video content</h3>
-                <div className="border-2 border-dashed border-border/50 rounded-xl p-8 text-center">
-                  <PlayCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground mb-4">Drop video files here or paste YouTube/Vimeo links</p>
-                  <Button variant="outline" size="lg">
-                    Choose Files
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-
-          {/* Transformation options */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {transformationTypes.map((type) => (
-              <div key={type.id} className="glass rounded-xl p-6 text-center hover:shadow-glow transition-all duration-300 cursor-pointer group">
-                <type.icon className={`w-8 h-8 mx-auto mb-3 ${type.color} group-hover:scale-110 transition-transform`} />
-                <h4 className="font-semibold mb-2">{type.label}</h4>
-                <p className="text-sm text-muted-foreground">{type.description}</p>
-              </div>
-            ))}
+          <div className="bg-muted brutal-border brutal-shadow px-8 py-6 max-w-4xl mx-auto">
+            <p className="text-xl md:text-2xl font-bold uppercase leading-tight">
+              TRANSFORM ANY WEB CONTENT INTO YOUR PERFECT VIEW. CONVERT ARTICLES, PAPERS, 
+              DOCUMENTS, AND YOUTUBE VIDEOS INTO SUMMARIES, MINDMAPS, PODCASTS, AND MORE.
+            </p>
           </div>
         </div>
 
+        {/* Brutal content transformation interface */}
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="bg-background brutal-border-thick brutal-shadow-lg">
+            <div className="bg-foreground text-background p-4">
+              <h2 className="text-2xl font-black uppercase tracking-wider">CONTENT DESTROYER 3000</h2>
+            </div>
+            
+            <Tabs defaultValue="url" className="w-full">
+              <div className="p-6 space-y-6">
+                <TabsList className="bg-muted brutal-border w-full h-auto p-2 grid grid-cols-3">
+                  <TabsTrigger value="url" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
+                    <Link2 className="w-4 h-4 mr-2" />
+                    URL
+                  </TabsTrigger>
+                  <TabsTrigger value="text" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
+                    <FileText className="w-4 h-4 mr-2" />
+                    TEXT
+                  </TabsTrigger>
+                  <TabsTrigger value="video" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                    VIDEO
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="url" className="space-y-6">
+                  <div className="space-y-6">
+                    <div className="bg-secondary text-secondary-foreground brutal-border p-4 transform -rotate-1">
+                      <h3 className="text-xl font-black uppercase">PASTE ANY URL TO DESTROY</h3>
+                    </div>
+                    
+                    <div className="flex gap-4">
+                      <div className="flex-1 relative">
+                        <Input
+                          type="url"
+                          placeholder="https://example.com/article or https://youtube.com/watch?v=..."
+                          value={inputUrl}
+                          onChange={(e) => setInputUrl(e.target.value)}
+                          className="h-16 text-lg bg-background brutal-border font-bold pl-16"
+                        />
+                        <Link2 className="absolute left-6 top-1/2 transform -translate-y-1/2 text-foreground w-6 h-6" />
+                      </div>
+                      <Button 
+                        variant="warning" 
+                        size="lg" 
+                        onClick={handleTransform}
+                        disabled={!inputUrl.trim() || isTransforming}
+                        className="h-16 px-8 text-lg"
+                      >
+                        {isTransforming ? (
+                          <>
+                            <Zap className="w-6 h-6 mr-2 animate-brutal-shake" />
+                            DESTROYING...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-6 h-6 mr-2" />
+                            DESTROY!
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="text" className="space-y-6">
+                  <div className="bg-muted brutal-border p-6">
+                    <h3 className="text-xl font-black uppercase mb-6">PASTE OR TYPE YOUR CONTENT</h3>
+                    <textarea
+                      placeholder="PASTE YOUR ARTICLE, RESEARCH PAPER, OR ANY TEXT CONTENT HERE..."
+                      className="w-full h-40 p-4 bg-background brutal-border font-bold resize-none text-sm uppercase placeholder:text-muted-foreground"
+                    />
+                    <Button variant="brutal" size="lg" className="w-full mt-4">
+                      <Zap className="w-5 h-5 mr-2" />
+                      DESTROY TEXT
+                    </Button>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="video" className="space-y-6">
+                  <div className="bg-muted brutal-border p-6">
+                    <h3 className="text-xl font-black uppercase mb-6">UPLOAD OR LINK TO VIDEO CONTENT</h3>
+                    <div className="brutal-border bg-background p-8 text-center">
+                      <PlayCircle className="w-12 h-12 mx-auto mb-4 text-foreground" />
+                      <p className="text-foreground mb-4 font-bold uppercase">DROP VIDEO FILES HERE OR PASTE YOUTUBE/VIMEO LINKS</p>
+                      <Button variant="outline" size="lg" className="font-black">
+                        CHOOSE FILES
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+              </div>
+            </Tabs>
+          </div>
+        </div>
+
+        {/* Brutal transformation options */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {transformationTypes.map((type) => (
+            <div key={type.id} className="bg-background brutal-border brutal-shadow hover:brutal-shadow-lg transition-all duration-100 p-6 text-center cursor-pointer group hover:-translate-y-2">
+              <div className="bg-muted brutal-border p-4 mb-4 mx-auto w-fit group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                <type.icon className="w-8 h-8" />
+              </div>
+              <h4 className="font-black uppercase mb-2 text-sm">{type.label}</h4>
+              <p className="text-xs font-bold uppercase text-muted-foreground">{type.description}</p>
+            </div>
+          ))}
+        </div>
+
         {/* Call to action */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button variant="glow" size="lg" className="text-lg px-8">
-            <Sparkles className="w-5 h-5 mr-2" />
-            Try Free Demo
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <Button variant="brutal" size="lg" className="text-xl px-12 py-6 h-auto">
+            <Sparkles className="w-6 h-6 mr-3" />
+            START DESTROYING
           </Button>
-          <Button variant="glass" size="lg" className="text-lg px-8">
-            Install Bookmarklet
+          <Button variant="warning" size="lg" className="text-xl px-12 py-6 h-auto">
+            INSTALL BOOKMARKLET
           </Button>
         </div>
       </div>

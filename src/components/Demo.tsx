@@ -158,13 +158,13 @@ export function Demo() {
             {demoTypes.map((type) => (
               <Button
                 key={type.id}
-                variant={currentDemo === type.id ? "hero" : "ghost"}
-                className="w-full justify-start text-left h-auto p-4"
+                variant={currentDemo === type.id ? "brutal" : "ghost"}
+                className="w-full justify-start text-left h-auto p-4 font-black uppercase"
                 onClick={() => setCurrentDemo(type.id)}
               >
                 <type.icon className="w-5 h-5 mr-3" />
                 <div>
-                  <div className="font-semibold">{type.label}</div>
+                  <div className="font-black">{type.label}</div>
                   <div className="text-sm opacity-70">
                     {demoContent[type.id as keyof typeof demoContent].type}
                   </div>
@@ -262,13 +262,13 @@ export function Demo() {
         <div className="text-center space-y-6">
           <h3 className="text-2xl font-bold">Ready to Transform Your Content?</h3>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="hero" size="lg" className="text-lg px-8">
+            <Button variant="brutal" size="lg" className="text-lg px-8 font-black">
               <Sparkles className="w-5 h-5 mr-2" />
-              Start Free Trial
+              START FREE TRIAL
             </Button>
-            <Button variant="glass" size="lg" className="text-lg px-8">
+            <Button variant="outline" size="lg" className="text-lg px-8 font-black">
               <Eye className="w-5 h-5 mr-2" />
-              Watch Full Demo
+              WATCH FULL DEMO
             </Button>
           </div>
         </div>

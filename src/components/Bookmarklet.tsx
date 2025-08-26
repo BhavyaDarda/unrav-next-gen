@@ -96,9 +96,9 @@ export function Bookmarklet() {
             <CardContent className="space-y-6">
               <div className="text-center">
                 <Button
-                  variant="glow"
+                  variant="warning"
                   size="lg"
-                  className="text-xl px-8 py-4 h-auto"
+                  className="text-xl px-8 py-4 h-auto font-black uppercase"
                   draggable
                   onDragStart={(e) => {
                     e.dataTransfer.setData('text/plain', 'UNRAV - Transform Content');
