@@ -102,62 +102,66 @@ export function LegalDocument() {
     setIsAnalyzing(true);
     setAnalysisProgress(0);
     
-    // Simulate analysis progress
-    const progressInterval = setInterval(() => {
-      setAnalysisProgress(prev => {
-        if (prev >= 95) {
-          clearInterval(progressInterval);
-          return 95;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 500);
+    try {
+      // Start progress animation
+      const progressInterval = setInterval(() => {
+        setAnalysisProgress(prev => {
+          if (prev >= 95) {
+            clearInterval(progressInterval);
+            return 95;
+          }
+          return prev + Math.random() * 10;
+        });
+      }, 800);
 
-    // Simulate API call
-    setTimeout(() => {
+      // Read file content
+      const fileContent = await uploadedFile.text();
+      
+      // Call our Supabase edge function
+      const { supabase } = await import("@/integrations/supabase/client");
+      
+      const { data, error } = await supabase.functions.invoke('analyze-legal-document', {
+        body: {
+          documentText: fileContent,
+          fileName: uploadedFile.name
+        }
+      });
+
       clearInterval(progressInterval);
       setAnalysisProgress(100);
+
+      if (error) {
+        console.error('Analysis error:', error);
+        throw new Error(error.message || 'Analysis failed');
+      }
+
+      if (!data?.analysis) {
+        throw new Error('No analysis data received');
+      }
+
+      setAnalysis(data.analysis);
+      setIsAnalyzing(false);
       
-      // Mock analysis results
+    } catch (error) {
+      console.error('Error analyzing document:', error);
+      setIsAnalyzing(false);
+      setAnalysisProgress(0);
+      
+      // Show error state
       setAnalysis({
-        summary: "This rental agreement contains standard terms with a few areas of concern. The document includes automatic rent increases and limited tenant protection clauses.",
-        riskLevel: "medium",
+        summary: "Sorry, we encountered an error analyzing your document. Please try again or contact support.",
+        riskLevel: "unknown",
         risks: [
           {
             severity: "high",
-            clause: "Automatic Rent Increase (Section 4.2)",
-            issue: "Rent can increase up to 15% annually without additional notice beyond the lease term.",
-            impact: "Could significantly increase housing costs"
-          },
-          {
-            severity: "medium", 
-            clause: "Maintenance Responsibilities (Section 7.1)",
-            issue: "Tenant responsible for repairs typically covered by landlord.",
-            impact: "Additional unexpected expenses"
-          },
-          {
-            severity: "low",
-            clause: "Pet Policy (Section 9.3)",
-            issue: "No pets allowed, including service animals.",
-            impact: "May violate disability accommodation laws"
+            clause: "Analysis Error",
+            issue: error instanceof Error ? error.message : "Unknown error occurred",
+            impact: "Document could not be analyzed"
           }
         ],
-        keyTerms: [
-          {
-            term: "Security Deposit",
-            explanation: "You must pay $2,500 upfront, which is refundable if you leave the property in good condition.",
-            section: "Section 3.1"
-          },
-          {
-            term: "Subletting",
-            explanation: "You cannot rent part of your apartment to others without written permission from the landlord.",
-            section: "Section 8.4"
-          }
-        ]
+        keyTerms: []
       });
-      
-      setIsAnalyzing(false);
-    }, 3000);
+    }
   };
 
   const askQuestion = async () => {
