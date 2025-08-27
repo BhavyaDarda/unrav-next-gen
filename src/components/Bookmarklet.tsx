@@ -24,7 +24,7 @@ export function Bookmarklet() {
     {
       number: "1",
       title: "Drag the Bookmarklet",
-      description: "Drag the UNRAV button below to your bookmarks bar",
+      description: "Drag the MindLoom AI button below to your bookmarks bar",
       icon: MousePointer,
       color: "text-primary"
     },
@@ -37,7 +37,7 @@ export function Bookmarklet() {
     },
     {
       number: "3",
-      title: "Click UNRAV",
+      title: "Click MindLoom AI",
       description: "Click the bookmarklet to instantly transform content",
       icon: Zap,
       color: "text-accent"
@@ -76,7 +76,7 @@ export function Bookmarklet() {
           </h2>
           
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Install our bookmarklet for instant access to UNRAV from any webpage. 
+            Install our bookmarklet for instant access to MindLoom AI from any webpage. 
             Transform content with a single click, wherever you are on the web.
           </p>
         </div>
@@ -87,7 +87,7 @@ export function Bookmarklet() {
             <CardHeader className="text-center">
               <CardTitle className="text-2xl flex items-center justify-center gap-3">
                 <Zap className="w-8 h-8 text-secondary" />
-                UNRAV Bookmarklet
+                MindLoom AI Bookmarklet
               </CardTitle>
               <CardDescription>
                 Drag this button to your bookmarks bar for instant access
@@ -101,12 +101,12 @@ export function Bookmarklet() {
                   className="text-xl px-8 py-4 h-auto font-black uppercase"
                   draggable
                   onDragStart={(e) => {
-                    e.dataTransfer.setData('text/plain', 'UNRAV - Transform Content');
+                    e.dataTransfer.setData('text/plain', 'MindLoom AI - Transform Content');
                     e.dataTransfer.setData('text/uri-list', bookmarkletCode);
                   }}
                 >
                   <Sparkles className="w-6 h-6 mr-3" />
-                  ⚡ UNRAV THIS!
+                  ⚡ MINDLOOM THIS!
                 </Button>
               </div>
               

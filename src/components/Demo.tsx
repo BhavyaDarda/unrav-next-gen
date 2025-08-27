@@ -137,7 +137,7 @@ export function Demo() {
           </Badge>
           
           <h2 className="text-4xl md:text-6xl font-black">
-            <span className="text-foreground">See UNRAV</span>
+            <span className="text-foreground">See MindLoom AI</span>
             <br />
             <span className="bg-gradient-primary bg-clip-text text-transparent">
               In Action
@@ -145,7 +145,7 @@ export function Demo() {
           </h2>
           
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Experience how UNRAV transforms complex content into your preferred format. 
+            Experience how MindLoom AI transforms complex content into your preferred format. 
             Try our interactive demo with real AI-generated examples.
           </p>
         </div>

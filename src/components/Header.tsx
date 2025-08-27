@@ -32,10 +32,10 @@ export function Header() {
             </div>
             <div>
               <h1 className="text-2xl font-black tracking-tighter uppercase">
-                UNRAV
+                MindLoom AI
               </h1>
               <p className="text-xs font-black uppercase text-muted-foreground leading-none">
-                MAKE COMPLEX SIMPLE AGAIN
+                WEAVE KNOWLEDGE INTO UNDERSTANDING
               </p>
             </div>
           </div>

@@ -102,11 +102,11 @@ export function Footer() {
               <div>
                 <h2 className="text-xl font-black">
                   <span className="bg-gradient-primary bg-clip-text text-transparent">
-                    UNRAV
+                    MindLoom AI
                   </span>
                 </h2>
                 <p className="text-xs text-muted-foreground">
-                  Make Complex Simple Again
+                  Weave Knowledge Into Understanding
                 </p>
               </div>
             </div>
@@ -160,10 +160,10 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground text-center md:text-left">
               <p className="flex items-center gap-1">
-                Made with <Heart className="w-4 h-4 text-red-500" /> by the UNRAV team
+                Made with <Heart className="w-4 h-4 text-red-500" /> by the MindLoom AI team
               </p>
               <p className="mt-1">
-                © 2024 UNRAV. All rights reserved.
+                © 2024 MindLoom AI. All rights reserved.
               </p>
             </div>
             
