@@ -33,11 +33,11 @@ export function Hero() {
       color: "text-secondary"
     },
     {
-      id: "notes",
-      label: "Study Notes",
+      id: "legal",
+      label: "Legal Analysis",
       icon: Download,
-      description: "Structured learning material",
-      color: "text-primary"
+      description: "Demystify legal documents",
+      color: "text-destructive"
     }
   ];
 
