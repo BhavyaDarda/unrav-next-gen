@@ -57,10 +57,10 @@ export function Hero() {
       <div className="absolute inset-0 brutal-pattern" />
       <div className="absolute inset-0 brutal-dots" />
 
-      {/* Floating brutal elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-primary brutal-border brutal-shadow rotate-12 animate-brutal-bounce" />
-      <div className="absolute top-40 right-20 w-16 h-16 bg-secondary brutal-border brutal-shadow -rotate-12 animate-brutal-shake" />
-      <div className="absolute bottom-40 left-20 w-24 h-12 bg-accent brutal-border brutal-shadow rotate-45" />
+      {/* Floating brutal elements - Better mobile positioning */}
+      <div className="absolute top-20 left-4 sm:left-10 w-12 h-12 sm:w-20 sm:h-20 bg-primary brutal-border brutal-shadow rotate-12 animate-brutal-bounce" />
+      <div className="absolute top-32 right-4 sm:top-40 sm:right-20 w-10 h-10 sm:w-16 sm:h-16 bg-secondary brutal-border brutal-shadow -rotate-12 animate-brutal-shake" />
+      <div className="absolute bottom-32 left-4 sm:bottom-40 sm:left-20 w-16 h-8 sm:w-24 sm:h-12 bg-accent brutal-border brutal-shadow rotate-45" />
 
       <div className="relative z-10 max-w-6xl mx-auto text-center space-y-12">
         {/* Brutal headline */}
@@ -72,23 +72,23 @@ export function Hero() {
             </div>
           </div>
           
-          <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-none">
-            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-8 py-4 mb-4 transform rotate-1">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-9xl font-black tracking-tighter leading-none">
+            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 mb-2 sm:mb-4 transform rotate-1">
               MAKE
             </div>
-            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-8 py-4 mb-4 transform -rotate-1">
+            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 mb-2 sm:mb-4 transform -rotate-1">
               COMPLEX
             </div>
-            <div className="bg-secondary text-secondary-foreground brutal-border brutal-shadow-lg px-8 py-4 mb-4 transform rotate-2">
+            <div className="bg-secondary text-secondary-foreground brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 mb-2 sm:mb-4 transform rotate-2">
               SIMPLE
             </div>
-            <div className="bg-accent text-accent-foreground brutal-border brutal-shadow-lg px-8 py-4 transform -rotate-1">
+            <div className="bg-accent text-accent-foreground brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 transform -rotate-1">
               AGAIN.
             </div>
           </h1>
 
-          <div className="bg-muted brutal-border brutal-shadow px-8 py-6 max-w-4xl mx-auto">
-            <p className="text-xl md:text-2xl font-bold uppercase leading-tight">
+          <div className="bg-muted brutal-border brutal-shadow px-4 sm:px-8 py-4 sm:py-6 max-w-4xl mx-auto">
+            <p className="text-lg sm:text-xl md:text-2xl font-bold uppercase leading-tight">
               TRANSFORM ANY WEB CONTENT INTO YOUR PERFECT VIEW. CONVERT ARTICLES, PAPERS, 
               DOCUMENTS, AND YOUTUBE VIDEOS INTO SUMMARIES, MINDMAPS, PODCASTS, AND MORE.
             </p>
@@ -104,18 +104,18 @@ export function Hero() {
             
             <Tabs defaultValue="url" className="w-full">
               <div className="p-6 space-y-6">
-                <TabsList className="bg-muted brutal-border w-full h-auto p-2 grid grid-cols-3">
-                  <TabsTrigger value="url" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
-                    <Link2 className="w-4 h-4 mr-2" />
-                    URL
+                <TabsList className="bg-muted brutal-border w-full h-auto p-2 grid grid-cols-3 gap-1">
+                  <TabsTrigger value="url" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2">
+                    <Link2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <span className="hidden xs:inline">URL</span>
                   </TabsTrigger>
-                  <TabsTrigger value="text" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
-                    <FileText className="w-4 h-4 mr-2" />
-                    TEXT
+                  <TabsTrigger value="text" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2">
+                    <FileText className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <span className="hidden xs:inline">TEXT</span>
                   </TabsTrigger>
-                  <TabsTrigger value="video" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
-                    <PlayCircle className="w-4 h-4 mr-2" />
-                    VIDEO
+                  <TabsTrigger value="video" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2">
+                    <PlayCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <span className="hidden xs:inline">VIDEO</span>
                   </TabsTrigger>
                 </TabsList>
 
@@ -125,33 +125,35 @@ export function Hero() {
                       <h3 className="text-xl font-black uppercase">PASTE ANY URL TO DESTROY</h3>
                     </div>
                     
-                    <div className="flex gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4">
                       <div className="flex-1 relative">
                         <Input
                           type="url"
                           placeholder="https://example.com/article or https://youtube.com/watch?v=..."
                           value={inputUrl}
                           onChange={(e) => setInputUrl(e.target.value)}
-                          className="h-16 text-lg bg-background brutal-border font-bold pl-16"
+                          className="h-12 sm:h-16 text-sm sm:text-lg bg-background brutal-border font-bold pl-12 sm:pl-16"
                         />
-                        <Link2 className="absolute left-6 top-1/2 transform -translate-y-1/2 text-foreground w-6 h-6" />
+                        <Link2 className="absolute left-4 sm:left-6 top-1/2 transform -translate-y-1/2 text-foreground w-4 h-4 sm:w-6 sm:h-6" />
                       </div>
                       <Button 
                         variant="warning" 
                         size="lg" 
                         onClick={handleTransform}
                         disabled={!inputUrl.trim() || isTransforming}
-                        className="h-16 px-8 text-lg"
+                        className="h-12 sm:h-16 px-4 sm:px-8 text-sm sm:text-lg w-full sm:w-auto"
                       >
                         {isTransforming ? (
                           <>
-                            <Zap className="w-6 h-6 mr-2 animate-brutal-shake" />
-                            DESTROYING...
+                            <Zap className="w-4 h-4 sm:w-6 sm:h-6 mr-2 animate-brutal-shake" />
+                            <span className="hidden xs:inline">DESTROYING...</span>
+                            <span className="xs:hidden">...</span>
                           </>
                         ) : (
                           <>
-                            <Zap className="w-6 h-6 mr-2" />
-                            DESTROY!
+                            <Zap className="w-4 h-4 sm:w-6 sm:h-6 mr-2" />
+                            <span className="hidden xs:inline">DESTROY!</span>
+                            <span className="xs:hidden">GO!</span>
                           </>
                         )}
                       </Button>

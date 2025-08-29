@@ -121,18 +121,18 @@ export function Features() {
             </div>
           </div>
           
-          <h2 className="text-4xl md:text-7xl font-black uppercase leading-none">
-            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-6 py-4 mb-4 transform -rotate-1 inline-block">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black uppercase leading-none">
+            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-4 sm:px-6 py-2 sm:py-4 mb-2 sm:mb-4 transform -rotate-1 inline-block">
               EVERYTHING YOU NEED
             </div>
             <br />
-            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-6 py-4 transform rotate-1 inline-block">
+            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-4 sm:px-6 py-2 sm:py-4 transform rotate-1 inline-block">
               TO SIMPLIFY CONTENT
             </div>
           </h2>
           
-          <div className="bg-muted brutal-border px-8 py-6 max-w-4xl mx-auto">
-            <p className="text-lg font-bold uppercase">
+          <div className="bg-muted brutal-border px-4 sm:px-8 py-4 sm:py-6 max-w-4xl mx-auto">
+            <p className="text-base sm:text-lg font-bold uppercase">
               OUR ADVANCED AI TECHNOLOGY TRANSFORMS HOW YOU CONSUME AND INTERACT WITH DIGITAL CONTENT,
               MAKING COMPLEX INFORMATION ACCESSIBLE AND ACTIONABLE.
             </p>
@@ -140,7 +140,7 @@ export function Features() {
         </div>
 
         {/* Transformation modes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {transformationModes.map((mode, index) => (
             <div key={index} className="bg-background brutal-border brutal-shadow hover:brutal-shadow-lg transition-all duration-100 p-6 text-center cursor-pointer group hover:-translate-y-2">
               <div className="bg-secondary brutal-border p-6 mb-6 mx-auto w-fit group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
@@ -157,7 +157,7 @@ export function Features() {
         </div>
 
         {/* Feature grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {features.map((feature, index) => (
             <div key={index} className="bg-background brutal-border brutal-shadow hover:brutal-shadow-lg transition-all duration-100 p-6 group hover:-translate-y-1">
               <div className="flex items-start justify-between mb-6">

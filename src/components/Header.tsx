@@ -20,8 +20,8 @@ export function Header() {
     label: "Support",
     href: "#support"
   }];
-  return <header className="fixed top-0 w-full z-50 bg-background brutal-border-thick border-t-0 border-l-0 border-r-0">
-      <div className="max-w-7xl mx-auto px-6 py-4">
+  return <header className="fixed top-0 w-full z-50 bg-background brutal-border-thick border-t-0 border-l-0 border-r-0 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           {/* Brutal Logo */}
           <div className="flex items-center gap-4">
@@ -29,22 +29,21 @@ export function Header() {
               <Zap className="w-8 h-8 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-2xl font-black tracking-tighter uppercase">
+              <h1 className="text-xl sm:text-2xl font-black tracking-tighter uppercase">
                 MindLoom AI
               </h1>
-              
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6">
-            {navItems.map(item => <a key={item.label} href={item.href} className="text-sm font-black uppercase text-foreground hover:text-primary transition-colors brutal-hover">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
+            {navItems.map(item => <a key={item.label} href={item.href} className="text-xs xl:text-sm font-black uppercase text-foreground hover:text-primary transition-colors brutal-hover">
                 {item.label}
               </a>)}
           </nav>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* New badge */}
             
 

@@ -184,20 +184,20 @@ export function LegalDocument() {
             </div>
           </div>
           
-          <h2 className="text-4xl md:text-6xl font-black leading-none">
-            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-8 py-4 mb-4 transform rotate-1">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-black leading-none">
+            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 mb-2 sm:mb-4 transform rotate-1">
               DEMYSTIFY
             </div>
-            <div className="bg-secondary text-secondary-foreground brutal-border brutal-shadow-lg px-8 py-4 mb-4 transform -rotate-1">
+            <div className="bg-secondary text-secondary-foreground brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 mb-2 sm:mb-4 transform -rotate-1">
               LEGAL
             </div>
-            <div className="bg-accent text-accent-foreground brutal-border brutal-shadow-lg px-8 py-4 transform rotate-2">
+            <div className="bg-accent text-accent-foreground brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 transform rotate-2">
               DOCUMENTS
             </div>
           </h2>
 
-          <div className="bg-muted brutal-border brutal-shadow px-8 py-6 max-w-4xl mx-auto">
-            <p className="text-xl md:text-2xl font-bold uppercase leading-tight">
+          <div className="bg-muted brutal-border brutal-shadow px-4 sm:px-8 py-4 sm:py-6 max-w-4xl mx-auto">
+            <p className="text-lg sm:text-xl md:text-2xl font-bold uppercase leading-tight">
               UPLOAD YOUR LEGAL DOCUMENTS AND GET INSTANT AI-POWERED ANALYSIS, 
               PLAIN ENGLISH SUMMARIES, AND RISK ASSESSMENTS TO PROTECT YOURSELF.
             </p>
@@ -300,22 +300,22 @@ export function LegalDocument() {
             </div>
 
             <Tabs defaultValue="summary" className="w-full">
-              <TabsList className="bg-muted brutal-border w-full h-auto p-2 grid grid-cols-4">
-                <TabsTrigger value="summary" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
-                  <FileText className="w-4 h-4 mr-2" />
-                  SUMMARY
+              <TabsList className="bg-muted brutal-border w-full h-auto p-2 grid grid-cols-2 sm:grid-cols-4 gap-1">
+                <TabsTrigger value="summary" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2">
+                  <FileText className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline">SUMMARY</span>
                 </TabsTrigger>
-                <TabsTrigger value="risks" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
-                  <AlertTriangle className="w-4 h-4 mr-2" />
-                  RISKS
+                <TabsTrigger value="risks" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2">
+                  <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline">RISKS</span>
                 </TabsTrigger>
-                <TabsTrigger value="terms" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
-                  <Eye className="w-4 h-4 mr-2" />
-                  KEY TERMS
+                <TabsTrigger value="terms" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2 hidden sm:flex">
+                  <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline">KEY TERMS</span>
                 </TabsTrigger>
-                <TabsTrigger value="chat" className="brutal-border bg-primary text-primary-foreground font-black uppercase data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  ASK AI
+                <TabsTrigger value="chat" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2 hidden sm:flex">
+                  <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline">ASK AI</span>
                 </TabsTrigger>
               </TabsList>
 
