@@ -127,11 +127,11 @@ export function Demo() {
   const currentContent = demoContent[currentDemo as keyof typeof demoContent];
 
   return (
-    <section className="py-24 px-6">
+    <section id="demo" className="py-24 px-6">
       <div className="max-w-6xl mx-auto space-y-16">
         {/* Section header */}
         <div className="text-center space-y-6">
-          <Badge variant="outline" className="glass border-accent/30 text-accent font-semibold px-4 py-2">
+          <Badge variant="outline" className="bg-accent text-accent-foreground brutal-border font-black px-4 py-2">
             <Play className="w-4 h-4 mr-2" />
             Live Demo
           </Badge>
@@ -175,7 +175,7 @@ export function Demo() {
 
           {/* Demo content */}
           <div className="lg:col-span-2">
-            <Card className="glass border-white/10 h-full">
+            <Card className="bg-background brutal-border brutal-shadow h-full">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -213,7 +213,7 @@ export function Demo() {
               
               <CardContent className="space-y-6">
                 {currentDemo === "podcast" && (
-                  <div className="glass rounded-lg p-4 space-y-3">
+                  <div className="bg-muted brutal-border p-4 space-y-3">
                     <div className="flex items-center gap-4">
                       <Button variant="outline" size="sm">
                         {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
@@ -237,7 +237,7 @@ export function Demo() {
                 </div>
 
                 {/* Demo stats */}
-                <div className="glass rounded-lg p-4">
+                <div className="bg-muted brutal-border p-4">
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
                       <div className="text-2xl font-bold text-primary">95%</div>

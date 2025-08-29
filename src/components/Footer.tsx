@@ -59,7 +59,7 @@ export function Footer() {
     <footer className="bg-gradient-to-t from-muted/50 to-background border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 py-16">
         {/* Newsletter section */}
-        <div className="glass rounded-3xl p-8 md:p-12 mb-16">
+        <div className="bg-background brutal-border brutal-shadow p-8 md:p-12 mb-16">
           <div className="text-center space-y-6">
             <div className="space-y-4">
               <h3 className="text-3xl font-black">

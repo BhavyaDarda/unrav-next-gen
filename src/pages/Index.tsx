@@ -4,6 +4,7 @@ import { Features } from "@/components/Features";
 import { LegalDocument } from "@/components/LegalDocument";
 import { Demo } from "@/components/Demo";
 import { Bookmarklet } from "@/components/Bookmarklet";
+import { Pricing } from "@/components/Pricing";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
@@ -16,6 +17,7 @@ const Index = () => {
         <LegalDocument />
         <Demo />
         <Bookmarklet />
+        <Pricing />
       </main>
       <Footer />
     </div>

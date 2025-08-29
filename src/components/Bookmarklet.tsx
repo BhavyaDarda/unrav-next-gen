@@ -58,11 +58,11 @@ export function Bookmarklet() {
   ];
 
   return (
-    <section className="py-24 px-6 bg-gradient-to-b from-background to-muted/20">
+    <section id="bookmarklet" className="py-24 px-6 bg-gradient-to-b from-background to-muted/20">
       <div className="max-w-6xl mx-auto space-y-16">
         {/* Section header */}
         <div className="text-center space-y-6">
-          <Badge variant="outline" className="glass border-secondary/30 text-secondary font-semibold px-4 py-2">
+          <Badge variant="outline" className="bg-secondary text-secondary-foreground brutal-border font-black px-4 py-2">
             <Bookmark className="w-4 h-4 mr-2" />
             One-Click Access
           </Badge>
@@ -83,7 +83,7 @@ export function Bookmarklet() {
 
         {/* Bookmarklet card */}
         <div className="max-w-2xl mx-auto">
-          <Card className="glass border-secondary/20 shadow-glow-yellow">
+          <Card className="bg-background brutal-border brutal-shadow">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl flex items-center justify-center gap-3">
                 <Zap className="w-8 h-8 text-secondary" />
@@ -133,7 +133,7 @@ export function Bookmarklet() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, index) => (
-              <Card key={index} className="glass border-white/10 hover:shadow-glow transition-all duration-300 text-center">
+              <Card key={index} className="bg-background brutal-border brutal-shadow hover:brutal-shadow-lg transition-all duration-100 hover:-translate-y-2 text-center">
                 <CardHeader>
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-accent p-4 text-white font-black text-2xl flex items-center justify-center">
                     {step.number}
@@ -156,7 +156,7 @@ export function Bookmarklet() {
         {/* Alternative installation */}
         <div className="text-center space-y-6">
           <h3 className="text-2xl font-bold">Prefer Manual Installation?</h3>
-          <Card className="glass border-white/10 max-w-2xl mx-auto">
+          <Card className="bg-background brutal-border brutal-shadow max-w-2xl mx-auto">
             <CardContent className="p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
                 Copy this code and create a new bookmark manually:
