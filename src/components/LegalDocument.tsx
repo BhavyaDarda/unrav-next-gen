@@ -165,11 +165,33 @@ export function LegalDocument() {
   };
 
   const askQuestion = async () => {
-    if (!userQuestion.trim()) return;
+    if (!userQuestion.trim() || !analysis) return;
     
-    // Simulate AI response
-    console.log("Asking question:", userQuestion);
-    setUserQuestion("");
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      
+      const { data, error } = await supabase.functions.invoke('ai-chat', {
+        body: {
+          question: userQuestion,
+          context: `Legal Document Analysis: ${analysis.summary}`,
+          chatHistory: []
+        }
+      });
+
+      if (error) {
+        console.error('Q&A error:', error);
+        return;
+      }
+
+      if (data?.success) {
+        console.log("AI Response:", data.answer);
+        // Here you could add the response to a chat history state
+      }
+      
+      setUserQuestion("");
+    } catch (error) {
+      console.error('Error asking question:', error);
+    }
   };
 
   return (

@@ -3,12 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
 import { Sparkles, Link2, FileText, PlayCircle, Zap, Brain, Headphones, Download } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import heroBackground from "@/assets/hero-background.jpg";
 
 export function Hero() {
   const [inputUrl, setInputUrl] = useState("");
   const [isTransforming, setIsTransforming] = useState(false);
+  const [transformResult, setTransformResult] = useState<any>(null);
+  const { toast } = useToast();
 
   const transformationTypes = [
     {
@@ -41,14 +45,61 @@ export function Hero() {
     }
   ];
 
-  const handleTransform = async () => {
+  const handleTransform = async (transformationType = "summary") => {
     if (!inputUrl.trim()) return;
     
     setIsTransforming(true);
-    // Simulate API call
-    setTimeout(() => {
+    setTransformResult(null);
+    
+    try {
+      toast({
+        title: "Processing Content",
+        description: "Extracting content from URL...",
+      });
+
+      // Step 1: Extract content from URL
+      const { data: scrapeData, error: scrapeError } = await supabase.functions.invoke('content-scraper', {
+        body: { url: inputUrl }
+      });
+
+      if (scrapeError || !scrapeData?.success) {
+        throw new Error(scrapeData?.error || 'Failed to extract content from URL');
+      }
+
+      toast({
+        title: "Content Extracted",
+        description: "Transforming with AI...",
+      });
+
+      // Step 2: Transform content
+      const { data: transformData, error: transformError } = await supabase.functions.invoke('content-transformer', {
+        body: {
+          content: scrapeData.content,
+          transformationType,
+          title: scrapeData.title
+        }
+      });
+
+      if (transformError || !transformData?.success) {
+        throw new Error(transformData?.error || 'Failed to transform content');
+      }
+
+      setTransformResult(transformData);
+      toast({
+        title: "Transformation Complete!",
+        description: `Successfully created ${transformationType}`,
+      });
+
+    } catch (error) {
+      console.error('Transformation error:', error);
+      toast({
+        title: "Transformation Failed",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      });
+    } finally {
       setIsTransforming(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -139,7 +190,7 @@ export function Hero() {
                       <Button 
                         variant="warning" 
                         size="lg" 
-                        onClick={handleTransform}
+                        onClick={() => handleTransform("summary")}
                         disabled={!inputUrl.trim() || isTransforming}
                         className="h-12 sm:h-16 px-4 sm:px-8 text-sm sm:text-lg w-full sm:w-auto"
                       >

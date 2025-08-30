@@ -33,6 +33,15 @@ port = 54321
 [functions.analyze-legal-document]
 verify_jwt = false
 
+[functions.content-scraper]
+verify_jwt = false
+
+[functions.content-transformer]
+verify_jwt = false
+
+[functions.ai-chat]
+verify_jwt = false
+
 [realtime]
 enabled = true
 port = 54325
