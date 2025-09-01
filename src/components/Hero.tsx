@@ -123,23 +123,23 @@ export function Hero() {
             </div>
           </div>
           
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-9xl font-black tracking-tighter leading-none">
-            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 mb-2 sm:mb-4 transform rotate-1">
+          <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black tracking-tighter leading-none">
+            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-3 xs:px-4 sm:px-6 md:px-8 py-2 xs:py-3 sm:py-4 mb-2 xs:mb-3 sm:mb-4 transform rotate-1">
               MAKE
             </div>
-            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 mb-2 sm:mb-4 transform -rotate-1">
+            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-3 xs:px-4 sm:px-6 md:px-8 py-2 xs:py-3 sm:py-4 mb-2 xs:mb-3 sm:mb-4 transform -rotate-1">
               COMPLEX
             </div>
-            <div className="bg-secondary text-secondary-foreground brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 mb-2 sm:mb-4 transform rotate-2">
+            <div className="bg-secondary text-secondary-foreground brutal-border brutal-shadow-lg px-3 xs:px-4 sm:px-6 md:px-8 py-2 xs:py-3 sm:py-4 mb-2 xs:mb-3 sm:mb-4 transform rotate-2">
               SIMPLE
             </div>
-            <div className="bg-accent text-accent-foreground brutal-border brutal-shadow-lg px-4 sm:px-8 py-2 sm:py-4 transform -rotate-1">
+            <div className="bg-accent text-accent-foreground brutal-border brutal-shadow-lg px-3 xs:px-4 sm:px-6 md:px-8 py-2 xs:py-3 sm:py-4 transform -rotate-1">
               AGAIN.
             </div>
           </h1>
 
-          <div className="bg-muted brutal-border brutal-shadow px-4 sm:px-8 py-4 sm:py-6 max-w-4xl mx-auto">
-            <p className="text-lg sm:text-xl md:text-2xl font-bold uppercase leading-tight">
+          <div className="bg-muted brutal-border brutal-shadow px-3 xs:px-4 sm:px-6 md:px-8 py-3 xs:py-4 sm:py-5 md:py-6 max-w-4xl mx-auto">
+            <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl font-bold uppercase leading-tight">
               TRANSFORM ANY WEB CONTENT INTO YOUR PERFECT VIEW. CONVERT ARTICLES, PAPERS, 
               DOCUMENTS, AND YOUTUBE VIDEOS INTO SUMMARIES, MINDMAPS, PODCASTS, AND MORE.
             </p>
@@ -155,18 +155,21 @@ export function Hero() {
             
             <Tabs defaultValue="url" className="w-full">
               <div className="p-6 space-y-6">
-                <TabsList className="bg-muted brutal-border w-full h-auto p-2 grid grid-cols-3 gap-1">
-                  <TabsTrigger value="url" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2">
+                <TabsList className="bg-muted brutal-border w-full h-auto p-1 xs:p-2 grid grid-cols-3 gap-1">
+                  <TabsTrigger value="url" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-1 xs:p-2">
                     <Link2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                     <span className="hidden xs:inline">URL</span>
+                    <span className="xs:hidden">U</span>
                   </TabsTrigger>
-                  <TabsTrigger value="text" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2">
+                  <TabsTrigger value="text" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-1 xs:p-2">
                     <FileText className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                     <span className="hidden xs:inline">TEXT</span>
+                    <span className="xs:hidden">T</span>
                   </TabsTrigger>
-                  <TabsTrigger value="video" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-2">
+                  <TabsTrigger value="video" className="brutal-border bg-primary text-primary-foreground font-black uppercase text-xs sm:text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground p-1 xs:p-2">
                     <PlayCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                     <span className="hidden xs:inline">VIDEO</span>
+                    <span className="xs:hidden">V</span>
                   </TabsTrigger>
                 </TabsList>
 

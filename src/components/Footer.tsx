@@ -77,11 +77,12 @@ export function Footer() {
               <Input
                 type="email"
                 placeholder="ENTER YOUR EMAIL"
-                className="flex-1 bg-background brutal-border font-bold uppercase placeholder:text-muted-foreground"
+                className="flex-1 bg-background brutal-border font-bold uppercase placeholder:text-muted-foreground text-sm sm:text-base"
               />
-              <Button variant="brutal" className="px-6 font-black">
-                <Sparkles className="w-4 h-4 mr-2" />
-                SUBSCRIBE
+              <Button variant="brutal" className="px-4 xs:px-6 font-black text-sm sm:text-base">
+                <Sparkles className="w-4 h-4 mr-1 xs:mr-2" />
+                <span className="hidden xs:inline">SUBSCRIBE</span>
+                <span className="xs:hidden">SUB</span>
               </Button>
             </div>
             

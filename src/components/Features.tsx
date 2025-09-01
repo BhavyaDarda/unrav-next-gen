@@ -121,18 +121,18 @@ export function Features() {
             </div>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black uppercase leading-none">
-            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-4 sm:px-6 py-2 sm:py-4 mb-2 sm:mb-4 transform -rotate-1 inline-block">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black uppercase leading-none">
+            <div className="bg-foreground text-background brutal-border brutal-shadow-lg px-3 xs:px-4 sm:px-6 py-2 xs:py-3 sm:py-4 mb-2 xs:mb-3 sm:mb-4 transform -rotate-1 inline-block">
               EVERYTHING YOU NEED
             </div>
             <br />
-            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-4 sm:px-6 py-2 sm:py-4 transform rotate-1 inline-block">
+            <div className="bg-primary text-primary-foreground brutal-border brutal-shadow-lg px-3 xs:px-4 sm:px-6 py-2 xs:py-3 sm:py-4 transform rotate-1 inline-block">
               TO SIMPLIFY CONTENT
             </div>
           </h2>
           
-          <div className="bg-muted brutal-border px-4 sm:px-8 py-4 sm:py-6 max-w-4xl mx-auto">
-            <p className="text-base sm:text-lg font-bold uppercase">
+          <div className="bg-muted brutal-border px-3 xs:px-4 sm:px-6 md:px-8 py-3 xs:py-4 sm:py-5 md:py-6 max-w-4xl mx-auto">
+            <p className="text-sm xs:text-base sm:text-lg font-bold uppercase leading-relaxed">
               OUR ADVANCED AI TECHNOLOGY TRANSFORMS HOW YOU CONSUME AND INTERACT WITH DIGITAL CONTENT,
               MAKING COMPLEX INFORMATION ACCESSIBLE AND ACTIONABLE.
             </p>
