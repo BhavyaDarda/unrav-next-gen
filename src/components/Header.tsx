@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Menu, Zap, Crown, MessageSquare, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { TransformationHistory } from "@/components/TransformationHistory";
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navItems = [{
@@ -44,8 +45,10 @@ export function Header() {
 
           {/* Action buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* New badge */}
-            
+            {/* History button */}
+            <div className="hidden sm:block">
+              <TransformationHistory />
+            </div>
 
             {/* Discord button */}
             <Button variant="ghost" size="sm" className="hidden sm:flex font-black uppercase">
@@ -80,6 +83,9 @@ export function Header() {
                   {item.label}
                 </a>)}
               <div className="flex flex-col gap-3 pt-4 brutal-border border-l-0 border-r-0 border-b-0">
+                <div className="sm:hidden">
+                  <TransformationHistory />
+                </div>
                 <Button variant="ghost" size="sm" className="justify-start font-black uppercase">
                   <MessageSquare className="w-4 h-4 mr-2" />
                   Join Discord

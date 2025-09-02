@@ -1,18 +1,27 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/components/ui/use-toast";
-import { Sparkles, Link2, FileText, PlayCircle, Zap, Brain, Headphones, Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Sparkles, Link2, FileText, PlayCircle, Zap, Brain, Headphones, Download, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { FileUpload } from "@/components/FileUpload";
+import { ResultsDisplay } from "@/components/ResultsDisplay";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { Skeleton } from "@/components/ui/skeleton";
 import heroBackground from "@/assets/hero-background.jpg";
 
 export function Hero() {
   const [inputUrl, setInputUrl] = useState("");
+  const [inputText, setInputText] = useState("");
   const [isTransforming, setIsTransforming] = useState(false);
   const [transformResult, setTransformResult] = useState<any>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+  const [showResults, setShowResults] = useState(false);
   const { toast } = useToast();
+  const { saveTransformation } = useLocalStorage();
 
   const transformationTypes = [
     {
@@ -45,8 +54,34 @@ export function Hero() {
     }
   ];
 
-  const handleTransform = async (transformationType = "summary") => {
-    if (!inputUrl.trim()) return;
+  // URL validation
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleTransformUrl = async (transformationType = "summary") => {
+    if (!inputUrl.trim()) {
+      toast({
+        title: "URL Required",
+        description: "Please enter a valid URL",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!isValidUrl(inputUrl)) {
+      toast({
+        title: "Invalid URL",
+        description: "Please enter a valid URL starting with http:// or https://",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setIsTransforming(true);
     setTransformResult(null);
@@ -84,10 +119,182 @@ export function Hero() {
         throw new Error(transformData?.error || 'Failed to transform content');
       }
 
-      setTransformResult(transformData);
+      // Save to local storage
+      const resultId = saveTransformation(
+        inputUrl,
+        scrapeData.title,
+        transformationType,
+        transformData,
+        scrapeData.content
+      );
+
+      const fullResult = {
+        ...transformData,
+        transformationType,
+        title: scrapeData.title,
+        url: inputUrl,
+        timestamp: Date.now(),
+      };
+
+      setTransformResult(fullResult);
+      setShowResults(true);
+      
       toast({
         title: "Transformation Complete!",
         description: `Successfully created ${transformationType}`,
+      });
+
+    } catch (error) {
+      console.error('Transformation error:', error);
+      toast({
+        title: "Transformation Failed",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsTransforming(false);
+    }
+  };
+
+  const handleTransformText = async (transformationType = "summary") => {
+    if (!inputText.trim()) {
+      toast({
+        title: "Text Required",
+        description: "Please enter some text to transform",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (inputText.trim().length < 50) {
+      toast({
+        title: "Text Too Short",
+        description: "Please enter at least 50 characters",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsTransforming(true);
+    setTransformResult(null);
+    
+    try {
+      toast({
+        title: "Processing Text",
+        description: "Transforming with AI...",
+      });
+
+      // Transform content directly
+      const { data: transformData, error: transformError } = await supabase.functions.invoke('content-transformer', {
+        body: {
+          content: inputText,
+          transformationType,
+          title: "Direct Text Input"
+        }
+      });
+
+      if (transformError || !transformData?.success) {
+        throw new Error(transformData?.error || 'Failed to transform content');
+      }
+
+      // Save to local storage
+      const resultId = saveTransformation(
+        undefined,
+        "Direct Text Input",
+        transformationType,
+        transformData,
+        inputText
+      );
+
+      const fullResult = {
+        ...transformData,
+        transformationType,
+        title: "Direct Text Input",
+        timestamp: Date.now(),
+      };
+
+      setTransformResult(fullResult);
+      setShowResults(true);
+      
+      toast({
+        title: "Transformation Complete!",
+        description: `Successfully created ${transformationType}`,
+      });
+
+    } catch (error) {
+      console.error('Transformation error:', error);
+      toast({
+        title: "Transformation Failed",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsTransforming(false);
+    }
+  };
+
+  const handleFilesUploaded = (files: any[]) => {
+    setUploadedFiles(files);
+  };
+
+  const handleTransformFiles = async (transformationType = "summary") => {
+    if (uploadedFiles.length === 0) {
+      toast({
+        title: "No Files",
+        description: "Please upload files first",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsTransforming(true);
+    setTransformResult(null);
+    
+    try {
+      toast({
+        title: "Processing Files",
+        description: "Transforming uploaded content with AI...",
+      });
+
+      // Combine all file contents
+      const combinedContent = uploadedFiles.map(f => f.content).join('\n\n---\n\n');
+      const fileNames = uploadedFiles.map(f => f.file.name).join(', ');
+
+      // Transform content
+      const { data: transformData, error: transformError } = await supabase.functions.invoke('content-transformer', {
+        body: {
+          content: combinedContent,
+          transformationType,
+          title: `Uploaded Files: ${fileNames}`
+        }
+      });
+
+      if (transformError || !transformData?.success) {
+        throw new Error(transformData?.error || 'Failed to transform content');
+      }
+
+      // Save to local storage
+      const resultId = saveTransformation(
+        undefined,
+        `Uploaded Files: ${fileNames}`,
+        transformationType,
+        transformData,
+        combinedContent
+      );
+
+      const fullResult = {
+        ...transformData,
+        transformationType,
+        title: `Uploaded Files: ${fileNames}`,
+        timestamp: Date.now(),
+      };
+
+      setTransformResult(fullResult);
+      setShowResults(true);
+      
+      toast({
+        title: "Transformation Complete!",
+        description: `Successfully processed ${uploadedFiles.length} file(s)`,
       });
 
     } catch (error) {
@@ -193,7 +400,7 @@ export function Hero() {
                       <Button 
                         variant="warning" 
                         size="lg" 
-                        onClick={() => handleTransform("summary")}
+                        onClick={() => handleTransformUrl("summary")}
                         disabled={!inputUrl.trim() || isTransforming}
                         className="h-12 sm:h-16 px-4 sm:px-8 text-sm sm:text-lg w-full sm:w-auto"
                       >
@@ -216,35 +423,102 @@ export function Hero() {
                 </TabsContent>
 
                 <TabsContent value="text" className="space-y-6">
-                  <div className="bg-muted brutal-border p-6">
-                    <h3 className="text-xl font-black uppercase mb-6">PASTE OR TYPE YOUR CONTENT</h3>
-                    <textarea
-                      placeholder="PASTE YOUR ARTICLE, RESEARCH PAPER, OR ANY TEXT CONTENT HERE..."
-                      className="w-full h-40 p-4 bg-background brutal-border font-bold resize-none text-sm uppercase placeholder:text-muted-foreground"
-                    />
-                    <Button variant="brutal" size="lg" className="w-full mt-4">
-                      <Zap className="w-5 h-5 mr-2" />
-                      DESTROY TEXT
-                    </Button>
+                  <div className="space-y-6">
+                    <div className="bg-secondary text-secondary-foreground brutal-border p-4 transform rotate-1">
+                      <h3 className="text-xl font-black uppercase">PASTE OR TYPE YOUR CONTENT</h3>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <Textarea
+                        placeholder="PASTE YOUR ARTICLE, RESEARCH PAPER, OR ANY TEXT CONTENT HERE..."
+                        value={inputText}
+                        onChange={(e) => setInputText(e.target.value)}
+                        className="min-h-40 bg-background brutal-border font-bold resize-none text-sm placeholder:text-muted-foreground"
+                      />
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>{inputText.length} characters (minimum 50)</span>
+                        {inputText.length >= 50 && <span className="text-green-500">✓ Ready to transform</span>}
+                      </div>
+                      <Button 
+                        variant="brutal" 
+                        size="lg" 
+                        className="w-full"
+                        onClick={() => handleTransformText("summary")}
+                        disabled={inputText.trim().length < 50 || isTransforming}
+                      >
+                        {isTransforming ? (
+                          <>
+                            <Zap className="w-5 h-5 mr-2 animate-brutal-shake" />
+                            DESTROYING TEXT...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-5 h-5 mr-2" />
+                            DESTROY TEXT
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="video" className="space-y-6">
-                  <div className="bg-muted brutal-border p-6">
-                    <h3 className="text-xl font-black uppercase mb-6">UPLOAD OR LINK TO VIDEO CONTENT</h3>
-                    <div className="brutal-border bg-background p-8 text-center">
-                      <PlayCircle className="w-12 h-12 mx-auto mb-4 text-foreground" />
-                      <p className="text-foreground mb-4 font-bold uppercase">DROP VIDEO FILES HERE OR PASTE YOUTUBE/VIMEO LINKS</p>
-                      <Button variant="outline" size="lg" className="font-black">
-                        CHOOSE FILES
-                      </Button>
+                  <div className="space-y-6">
+                    <div className="bg-accent text-accent-foreground brutal-border p-4 transform -rotate-1">
+                      <h3 className="text-xl font-black uppercase">UPLOAD FILES OR DOCUMENTS</h3>
                     </div>
+                    
+                    <FileUpload 
+                      onFilesUploaded={handleFilesUploaded}
+                      maxFiles={3}
+                    />
+                    
+                    {uploadedFiles.length > 0 && (
+                      <Button 
+                        variant="warning" 
+                        size="lg" 
+                        className="w-full"
+                        onClick={() => handleTransformFiles("summary")}
+                        disabled={isTransforming}
+                      >
+                        {isTransforming ? (
+                          <>
+                            <Zap className="w-5 h-5 mr-2 animate-brutal-shake" />
+                            PROCESSING FILES...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-5 h-5 mr-2" />
+                            DESTROY {uploadedFiles.length} FILE(S)
+                          </>
+                        )}
+                      </Button>
+                    )}
                   </div>
                 </TabsContent>
               </div>
             </Tabs>
           </div>
         </div>
+
+        {/* Loading state */}
+        {isTransforming && (
+          <div className="bg-background brutal-border brutal-shadow-lg p-8 space-y-6">
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Zap className="w-8 h-8 text-primary animate-brutal-shake" />
+                <h3 className="text-2xl font-black uppercase">DESTRUCTION IN PROGRESS</h3>
+              </div>
+              <p className="text-muted-foreground font-bold">AI is analyzing and transforming your content...</p>
+            </div>
+            
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </div>
+        )}
 
         {/* Brutal transformation options */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -270,6 +544,14 @@ export function Hero() {
           </Button>
         </div>
       </div>
+      
+      {/* Results Display Modal */}
+      {showResults && transformResult && (
+        <ResultsDisplay 
+          result={transformResult}
+          onClose={() => setShowResults(false)}
+        />
+      )}
     </section>
   );
 }
