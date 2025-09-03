@@ -50,11 +50,6 @@ export function Header() {
               <TransformationHistory />
             </div>
 
-            {/* Discord button */}
-            <Button variant="ghost" size="sm" className="hidden sm:flex font-black uppercase">
-              <MessageSquare className="w-4 h-4 mr-2" />
-              Discord
-            </Button>
 
             {/* Upgrade button */}
             <Button variant="accent" size="sm" className="hidden sm:flex">
@@ -86,10 +81,6 @@ export function Header() {
                 <div className="sm:hidden">
                   <TransformationHistory />
                 </div>
-                <Button variant="ghost" size="sm" className="justify-start font-black uppercase">
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Join Discord
-                </Button>
                 <Button variant="accent" size="sm" className="justify-start">
                   <Crown className="w-4 h-4 mr-2" />
                   Upgrade to Pro
