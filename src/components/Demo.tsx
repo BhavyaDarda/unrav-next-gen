@@ -1,277 +1,324 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Play, 
-  Pause, 
-  Volume2, 
-  Download, 
-  Share2, 
-  Eye,
-  FileText,
-  Headphones,
-  Brain,
-  BookOpen,
-  Sparkles,
-  Clock,
-  BarChart3
-} from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Globe, FileText, Upload, Loader2, Copy, Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { FileUpload } from "./FileUpload";
+import { useEnhancedFileUpload } from "@/hooks/useEnhancedFileUpload";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Demo() {
-  const [currentDemo, setCurrentDemo] = useState("summary");
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [activeTab, setActiveTab] = useState("url");
+  const [url, setUrl] = useState("");
+  const [text, setText] = useState("");
+  const [transformationType, setTransformationType] = useState("summary");
+  const [result, setResult] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const { user } = useAuth();
+  const { uploadedFiles, uploadFiles, removeFile, clearFiles, isUploading } = useEnhancedFileUpload();
 
-  const demoContent = {
-    summary: {
-      title: "AI Summary Example",
-      type: "Article Summary",
-      duration: "30 sec read",
-      content: `
-        **Key Points:**
-        • Advanced AI models can now understand context and nuance in human language
-        • Natural language processing has improved dramatically with transformer architectures
-        • Applications include content summarization, translation, and creative writing
-        • Ethical considerations around AI bias and misinformation remain important challenges
+  const transformationTypes = [
+    { id: "summary", label: "Summary", icon: "📝" },
+    { id: "mindmap", label: "Mind Map", icon: "🧠" },
+    { id: "podcast", label: "Podcast Script", icon: "🎙️" },
+    { id: "legal", label: "Legal Analysis", icon: "⚖️" },
+    { id: "extract", label: "Data Extraction", icon: "🔍" },
+  ];
+
+  const handleTransform = async () => {
+    if (!url && !text && uploadedFiles.length === 0) {
+      toast({
+        title: "Input Required",
+        description: "Please provide a URL, text, or upload files to transform.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    setResult("");
+
+    try {
+      let content = text;
+      let title = "Direct Input";
+
+      // Handle different input types
+      if (activeTab === "url" && url) {
+        // Scrape URL content
+        const { data: scrapeData, error: scrapeError } = await supabase.functions.invoke('content-scraper', {
+          body: { url }
+        });
+
+        if (scrapeError) throw scrapeError;
+        if (!scrapeData.success) throw new Error(scrapeData.error);
+
+        content = scrapeData.content;
+        title = scrapeData.title;
+
+        // Transform the content
+        const { data: transformData, error: transformError } = await supabase.functions.invoke('content-transformer', {
+          body: { 
+            content, 
+            transformationType,
+            title 
+          }
+        });
+
+        if (transformError) throw transformError;
+        if (!transformData.success) throw new Error(transformData.error);
+
+        setResult(transformData.transformedContent);
         
-        **Main Insight:**
-        The rapid advancement in AI language models represents a paradigm shift in how we interact with and process information, requiring both excitement and caution as we integrate these tools into daily workflows.
-      `,
-      icon: FileText,
-      color: "text-primary"
-    },
-    mindmap: {
-      title: "Interactive Mindmap",
-      type: "Visual Structure", 
-      duration: "Interactive",
-      content: `
-        🧠 **AI Language Models**
-        ├── 📚 **Core Technologies**
-        │   ├── Transformer Architecture
-        │   ├── Attention Mechanisms
-        │   └── Neural Networks
-        ├── 🎯 **Applications**
-        │   ├── Content Summarization
-        │   ├── Language Translation
-        │   ├── Creative Writing
-        │   └── Code Generation
-        ├── ⚡ **Benefits**
-        │   ├── Increased Productivity
-        │   ├── Better Accessibility
-        │   └── Enhanced Creativity
-        └── ⚠️ **Challenges**
-            ├── Bias & Fairness
-            ├── Misinformation
-            └── Ethical Use
-      `,
-      icon: Brain,
-      color: "text-accent"
-    },
-    podcast: {
-      title: "AI-Generated Podcast",
-      type: "Audio Content",
-      duration: "8 min listen",
-      content: `
-        🎧 **Podcast Transcript Preview:**
+      } else if (activeTab === "file" && uploadedFiles.length > 0) {
+        // Process uploaded files
+        const files = uploadedFiles.map(f => ({
+          fileName: f.file.name,
+          fileType: f.file.type,
+          content: f.content,
+        }));
+
+        const { data: processData, error: processError } = await supabase.functions.invoke('file-processor', {
+          body: { 
+            files,
+            transformationType,
+            customInstructions: text // Use text field as custom instructions for files
+          }
+        });
+
+        if (processError) throw processError;
+        if (!processData.success) throw new Error(processData.error);
+
+        // Format results from multiple files
+        const formattedResults = processData.results.map((result: any) => 
+          `## ${result.fileName}\n\n${result.transformedContent}`
+        ).join('\n\n---\n\n');
+
+        setResult(formattedResults);
         
-        "Welcome to Tech Insights, where we break down complex topics into digestible conversations. Today we're exploring the fascinating world of AI language models and their impact on how we process information.
-        
-        These advanced systems have revolutionized our ability to understand and generate human-like text. What's particularly exciting is how they've moved beyond simple pattern matching to actually understanding context and nuance..."
-        
-        **Audio Features:**
-        • Natural speech synthesis
-        • Multiple voice options
-        • Adjustable playback speed
-        • Chapter navigation
-        • Offline listening
-      `,
-      icon: Headphones,
-      color: "text-secondary"
-    },
-    notes: {
-      title: "Study Notes",
-      type: "Learning Material",
-      duration: "Study guide",
-      content: `
-        📖 **Study Guide: AI Language Models**
-        
-        **Definition:**
-        AI language models are neural networks trained to understand and generate human language by learning patterns from vast text datasets.
-        
-        **Key Concepts to Remember:**
-        1. **Transformer Architecture** - The foundation of modern language models
-        2. **Attention Mechanisms** - How models focus on relevant information
-        3. **Fine-tuning** - Adapting models for specific tasks
-        
-        **Study Questions:**
-        • What makes transformer architecture different from previous approaches?
-        • How do attention mechanisms improve model performance?
-        • What are the main ethical considerations when deploying AI language models?
-        
-        **Further Reading:**
-        • "Attention Is All You Need" - Original transformer paper
-        • AI Ethics guidelines from major tech companies
-      `,
-      icon: BookOpen,
-      color: "text-primary"
+      } else if (activeTab === "text" && text) {
+        // Transform direct text input
+        const { data: transformData, error: transformError } = await supabase.functions.invoke('content-transformer', {
+          body: { 
+            content: text, 
+            transformationType,
+            title: "Direct Text Input"
+          }
+        });
+
+        if (transformError) throw transformError;
+        if (!transformData.success) throw new Error(transformData.error);
+
+        setResult(transformData.transformedContent);
+      }
+
+      // Save to transformation history if user is logged in
+      if (user && result) {
+        await supabase.from('transformations').insert({
+          user_id: user.id,
+          title: title,
+          transformation_type: transformationType,
+          original_content: content || text || `${uploadedFiles.length} files`,
+          transformed_content: result,
+        });
+      }
+      
+      toast({
+        title: "Transformation Complete",
+        description: "Your content has been successfully transformed!",
+      });
+
+    } catch (error) {
+      console.error('Transformation error:', error);
+      toast({
+        title: "Transformation Failed", 
+        description: error.message || "An error occurred during transformation.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const demoTypes = [
-    { id: "summary", label: "Summary", icon: FileText },
-    { id: "mindmap", label: "Mindmap", icon: Brain },
-    { id: "podcast", label: "Podcast", icon: Headphones },
-    { id: "notes", label: "Study Notes", icon: BookOpen }
-  ];
+  const copyToClipboard = async () => {
+    if (result) {
+      await navigator.clipboard.writeText(result);
+      toast({
+        title: "Copied!",
+        description: "Result copied to clipboard.",
+      });
+    }
+  };
 
-  const currentContent = demoContent[currentDemo as keyof typeof demoContent];
+  const downloadResult = () => {
+    if (result) {
+      const blob = new Blob([result], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `transformed-content-${Date.now()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  };
 
   return (
-    <section id="demo" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto space-y-16">
-        {/* Section header */}
-        <div className="text-center space-y-6">
-          <Badge variant="outline" className="bg-accent text-accent-foreground brutal-border font-black px-4 py-2">
-            <Play className="w-4 h-4 mr-2" />
-            Live Demo
-          </Badge>
-          
-          <h2 className="text-4xl md:text-6xl font-black">
-            <span className="text-foreground">See MindLoom AI</span>
-            <br />
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              In Action
-            </span>
-          </h2>
-          
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Experience how MindLoom AI transforms complex content into your preferred format. 
-            Try our interactive demo with real AI-generated examples.
+    <section id="demo" className="py-16 px-4">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="text-center space-y-4">
+          <h2 className="text-3xl font-bold">Try DocBash AI</h2>
+          <p className="text-muted-foreground">
+            Transform your content with AI-powered tools. Upload files, paste URLs, or enter text directly.
           </p>
         </div>
 
-        {/* Demo interface */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Demo type selector */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold mb-4">Choose Transformation</h3>
-            {demoTypes.map((type) => (
-              <Button
-                key={type.id}
-                variant={currentDemo === type.id ? "brutal" : "ghost"}
-                className="w-full justify-start text-left h-auto p-4 font-black uppercase"
-                onClick={() => setCurrentDemo(type.id)}
-              >
-                <type.icon className="w-5 h-5 mr-3" />
-                <div>
-                  <div className="font-black">{type.label}</div>
-                  <div className="text-sm opacity-70">
-                    {demoContent[type.id as keyof typeof demoContent].type}
-                  </div>
-                </div>
-              </Button>
-            ))}
-          </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Content Transformation</CardTitle>
+            <CardDescription>
+              Choose your input method and transformation type
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Transformation Type Selector */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium">Transformation Type</label>
+              <div className="flex flex-wrap gap-2">
+                {transformationTypes.map((type) => (
+                  <Button
+                    key={type.id}
+                    variant={transformationType === type.id ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setTransformationType(type.id)}
+                  >
+                    <span className="mr-2">{type.icon}</span>
+                    {type.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
 
-          {/* Demo content */}
-          <div className="lg:col-span-2">
-            <Card className="bg-background brutal-border brutal-shadow h-full">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg bg-gradient-to-br from-muted to-muted/50`}>
-                      <currentContent.icon className={`w-6 h-6 ${currentContent.color}`} />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">{currentContent.title}</CardTitle>
-                      <CardDescription className="flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        {currentContent.duration}
-                      </CardDescription>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-2">
-                    {currentDemo === "podcast" && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsPlaying(!isPlaying)}
-                      >
-                        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                      </Button>
-                    )}
-                    <Button variant="outline" size="sm">
-                      <Share2 className="w-4 h-4" />
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Download className="w-4 h-4" />
-                    </Button>
-                  </div>
+            {/* Input Method Tabs */}
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="url" className="flex items-center gap-2">
+                  <Globe className="w-4 h-4" />
+                  URL
+                </TabsTrigger>
+                <TabsTrigger value="text" className="flex items-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  Text
+                </TabsTrigger>
+                <TabsTrigger value="file" className="flex items-center gap-2">
+                  <Upload className="w-4 h-4" />
+                  Files
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="url" className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="url-input" className="text-sm font-medium">
+                    Website URL
+                  </label>
+                  <input
+                    id="url-input"
+                    type="url"
+                    placeholder="https://example.com/article"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    className="w-full px-3 py-2 border border-input bg-background rounded-md text-sm"
+                  />
                 </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-6">
-                {currentDemo === "podcast" && (
-                  <div className="bg-muted brutal-border p-4 space-y-3">
-                    <div className="flex items-center gap-4">
-                      <Button variant="outline" size="sm">
-                        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                      </Button>
-                      <div className="flex-1 bg-muted/50 rounded-full h-2 overflow-hidden">
-                        <div className="bg-gradient-primary h-full w-1/3 rounded-full" />
-                      </div>
-                      <Volume2 className="w-4 h-4 text-muted-foreground" />
+              </TabsContent>
+
+              <TabsContent value="text" className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="text-input" className="text-sm font-medium">
+                    Text Content
+                  </label>
+                  <Textarea
+                    id="text-input"
+                    placeholder="Paste your text here..."
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    className="min-h-[200px]"
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="file" className="space-y-4">
+                <FileUpload 
+                  onFilesUploaded={() => {}} 
+                  maxFiles={10}
+                  className="min-h-[200px]"
+                />
+                {uploadedFiles.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Uploaded Files ({uploadedFiles.length}):</p>
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                      {uploadedFiles.map((file, index) => (
+                        <div key={file.id} className="flex items-center justify-between p-2 bg-muted rounded text-sm">
+                          <span>{file.file.name}</span>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => removeFile(index)}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      ))}
                     </div>
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>2:34</span>
-                      <span>8:12</span>
-                    </div>
+                    <Textarea
+                      placeholder="Add custom instructions for processing these files..."
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      className="min-h-[100px]"
+                    />
                   </div>
                 )}
-                
-                <div className="prose prose-invert max-w-none">
-                  <div className="whitespace-pre-line text-sm leading-relaxed">
-                    {currentContent.content}
+              </TabsContent>
+            </Tabs>
+
+            {/* Transform Button */}
+            <Button 
+              onClick={handleTransform} 
+              disabled={isLoading || (!url && !text && uploadedFiles.length === 0)} 
+              className="w-full"
+            >
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading ? "Transforming..." : "Transform Content"}
+            </Button>
+
+            {/* Results */}
+            {result && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Transformed Content</h3>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={downloadResult}>
+                      <Download className="w-4 h-4 mr-2" />
+                      Download
+                    </Button>
                   </div>
                 </div>
-
-                {/* Demo stats */}
-                <div className="bg-muted brutal-border p-4">
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <div className="text-2xl font-bold text-primary">95%</div>
-                      <div className="text-xs text-muted-foreground">Accuracy</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-secondary">2.3s</div>
-                      <div className="text-xs text-muted-foreground">Process Time</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-accent">847</div>
-                      <div className="text-xs text-muted-foreground">Words</div>
-                    </div>
-                  </div>
+                <div className="bg-muted p-4 rounded-md max-h-96 overflow-y-auto">
+                  <pre className="whitespace-pre-wrap text-sm">{result}</pre>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Try demo CTA */}
-        <div className="text-center space-y-6">
-          <h3 className="text-2xl font-bold">Ready to Transform Your Content?</h3>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="brutal" size="lg" className="text-lg px-8 font-black">
-              <Sparkles className="w-5 h-5 mr-2" />
-              START FREE TRIAL
-            </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 font-black">
-              <Eye className="w-5 h-5 mr-2" />
-              WATCH FULL DEMO
-            </Button>
-          </div>
-        </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </section>
   );
