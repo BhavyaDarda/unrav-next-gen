@@ -9,18 +9,50 @@ import {
   Share2, 
   Eye,
   FileText,
-  Headphones,
+  Upload,
   Brain,
   BookOpen,
   Sparkles,
   Clock,
-  BarChart3
+  BarChart3,
+  Loader2
 } from "lucide-react";
 import { useState } from "react";
+import { useEnhancedFileUpload } from "@/hooks/useEnhancedFileUpload";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useDropzone } from "react-dropzone";
 
 export function Demo() {
   const [currentDemo, setCurrentDemo] = useState("summary");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [transformationResult, setTransformationResult] = useState<string | null>(null);
+  
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const { uploadFiles, uploadedFiles, isUploading, clearFiles } = useEnhancedFileUpload();
+
+  const onDrop = async (acceptedFiles: File[]) => {
+    await uploadFiles(acceptedFiles);
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: {
+      'text/plain': ['.txt'],
+      'application/pdf': ['.pdf'],
+      'application/msword': ['.doc'],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+      'audio/mpeg': ['.mp3'],
+      'audio/wav': ['.wav'],
+      'video/mp4': ['.mp4'],
+      'application/json': ['.json'],
+      'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp']
+    }
+  });
 
   const demoContent = {
     summary: {
@@ -67,26 +99,29 @@ export function Demo() {
       icon: Brain,
       color: "text-accent"
     },
-    podcast: {
-      title: "AI-Generated Podcast",
-      type: "Audio Content",
-      duration: "8 min listen",
-      content: `
-        🎧 **Podcast Transcript Preview:**
+    files: {
+      title: "File Processing",
+      type: "Multi-format Support",
+      duration: "Instant",
+      content: transformationResult || `
+        📁 **Upload Any File Type:**
         
-        "Welcome to Tech Insights, where we break down complex topics into digestible conversations. Today we're exploring the fascinating world of AI language models and their impact on how we process information.
+        • **Documents**: PDF, DOCX, TXT files
+        • **Audio**: MP3, WAV files for transcription
+        • **Video**: MP4 files for analysis
+        • **Data**: JSON, CSV files for processing
+        • **Images**: PNG, JPG for OCR and analysis
         
-        These advanced systems have revolutionized our ability to understand and generate human-like text. What's particularly exciting is how they've moved beyond simple pattern matching to actually understanding context and nuance..."
+        **AI Processing:**
+        • Automatic content extraction
+        • Intelligent text analysis
+        • Multi-modal understanding
+        • Context-aware transformations
         
-        **Audio Features:**
-        • Natural speech synthesis
-        • Multiple voice options
-        • Adjustable playback speed
-        • Chapter navigation
-        • Offline listening
+        ${uploadedFiles.length > 0 ? `**Uploaded Files:** ${uploadedFiles.map(f => f.file.name).join(', ')}` : '**Drop a file above to start processing!**'}
       `,
-      icon: Headphones,
-      color: "text-secondary"
+      icon: Upload,
+      color: "text-accent"
     },
     notes: {
       title: "Study Notes",
@@ -120,9 +155,63 @@ export function Demo() {
   const demoTypes = [
     { id: "summary", label: "Summary", icon: FileText },
     { id: "mindmap", label: "Mindmap", icon: Brain },
-    { id: "podcast", label: "Podcast", icon: Headphones },
+    { id: "files", label: "Files", icon: Upload },
     { id: "notes", label: "Study Notes", icon: BookOpen }
   ];
+
+  const processFile = async (transformationType: string) => {
+    if (uploadedFiles.length === 0) {
+      toast({
+        title: "No File Selected",
+        description: "Please upload a file first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to process files.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const file = uploadedFiles[0];
+      const { data, error } = await supabase.functions.invoke('file-processor', {
+        body: {
+          fileId: file.id,
+          transformationType,
+          customPrompt: null
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        setTransformationResult(data.transformedContent);
+        setCurrentDemo('files');
+        toast({
+          title: "File Processed",
+          description: "Your file has been successfully transformed!",
+        });
+      } else {
+        throw new Error(data.error || 'Processing failed');
+      }
+    } catch (error) {
+      console.error('File processing error:', error);
+      toast({
+        title: "Processing Error",
+        description: error.message || "Failed to process file",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const currentContent = demoContent[currentDemo as keyof typeof demoContent];
 
@@ -160,9 +249,19 @@ export function Demo() {
                 key={type.id}
                 variant={currentDemo === type.id ? "brutal" : "ghost"}
                 className="w-full justify-start text-left h-auto p-4 font-black uppercase"
-                onClick={() => setCurrentDemo(type.id)}
+                onClick={() => {
+                  setCurrentDemo(type.id);
+                  if (type.id !== 'files' && uploadedFiles.length > 0) {
+                    processFile(type.id);
+                  }
+                }}
+                disabled={isProcessing}
               >
-                <type.icon className="w-5 h-5 mr-3" />
+                {isProcessing && type.id !== 'files' && uploadedFiles.length > 0 ? (
+                  <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                ) : (
+                  <type.icon className="w-5 h-5 mr-3" />
+                )}
                 <div>
                   <div className="font-black">{type.label}</div>
                   <div className="text-sm opacity-70">
@@ -212,21 +311,68 @@ export function Demo() {
               </CardHeader>
               
               <CardContent className="space-y-6">
-                {currentDemo === "podcast" && (
-                  <div className="bg-muted brutal-border p-4 space-y-3">
-                    <div className="flex items-center gap-4">
-                      <Button variant="outline" size="sm">
-                        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                      </Button>
-                      <div className="flex-1 bg-muted/50 rounded-full h-2 overflow-hidden">
-                        <div className="bg-gradient-primary h-full w-1/3 rounded-full" />
+                {currentDemo === "files" && (
+                  <div className="space-y-4">
+                    {/* File Upload Zone */}
+                    <div
+                      {...getRootProps()}
+                      className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer
+                        ${isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25'}
+                        ${isUploading ? 'opacity-50 pointer-events-none' : 'hover:border-primary hover:bg-primary/5'}
+                      `}
+                    >
+                      <input {...getInputProps()} />
+                      <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                      
+                      {isUploading ? (
+                        <div className="space-y-2">
+                          <Loader2 className="w-6 h-6 mx-auto animate-spin" />
+                          <p className="text-sm text-muted-foreground">Uploading file...</p>
+                        </div>
+                      ) : uploadedFiles.length > 0 ? (
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium">
+                            File uploaded: {uploadedFiles[0].file.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Choose a transformation type above to process
+                          </p>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              clearFiles();
+                              setTransformationResult(null);
+                            }}
+                          >
+                            Upload Different File
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium">
+                            {isDragActive ? 'Drop your file here' : 'Drop a file here or click to browse'}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Supports PDF, DOCX, TXT, MP3, MP4, JSON, and images
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Processing indicator */}
+                    {isProcessing && (
+                      <div className="bg-muted brutal-border p-4 space-y-2">
+                        <div className="flex items-center gap-3">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm font-medium">Processing file...</span>
+                        </div>
+                        <div className="w-full bg-muted/50 rounded-full h-2 overflow-hidden">
+                          <div className="bg-gradient-primary h-full w-2/3 rounded-full animate-pulse" />
+                        </div>
                       </div>
-                      <Volume2 className="w-4 h-4 text-muted-foreground" />
-                    </div>
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>2:34</span>
-                      <span>8:12</span>
-                    </div>
+                    )}
                   </div>
                 )}
                 
@@ -240,15 +386,24 @@ export function Demo() {
                 <div className="bg-muted brutal-border p-4">
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
-                      <div className="text-2xl font-bold text-primary">95%</div>
+                      <div className="text-2xl font-bold text-primary">
+                        {currentDemo === 'files' && uploadedFiles.length > 0 ? '99%' : '95%'}
+                      </div>
                       <div className="text-xs text-muted-foreground">Accuracy</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-secondary">2.3s</div>
+                      <div className="text-2xl font-bold text-secondary">
+                        {currentDemo === 'files' && transformationResult ? '1.8s' : '2.3s'}
+                      </div>
                       <div className="text-xs text-muted-foreground">Process Time</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-accent">847</div>
+                      <div className="text-2xl font-bold text-accent">
+                        {currentDemo === 'files' && transformationResult 
+                          ? transformationResult.split(' ').length 
+                          : '847'
+                        }
+                      </div>
                       <div className="text-xs text-muted-foreground">Words</div>
                     </div>
                   </div>

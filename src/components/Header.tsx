@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Menu, Zap, Crown, MessageSquare, ChevronRight } from "lucide-react";
+import { Sparkles, Menu, Zap, Crown, MessageSquare, ChevronRight, LogIn, LogOut, User } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { TransformationHistory } from "@/components/TransformationHistory";
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut, isLoading } = useAuth();
   const navItems = [{
     label: "Features",
     href: "#features"
@@ -50,19 +53,52 @@ export function Header() {
               <TransformationHistory />
             </div>
 
+            {!isLoading && (
+              <>
+                {user ? (
+                  <>
+                    {/* User info */}
+                    <div className="hidden md:flex items-center gap-2 text-sm">
+                      <User className="w-4 h-4" />
+                      <span className="font-medium truncate max-w-32">
+                        {user.email}
+                      </span>
+                    </div>
 
-            {/* Upgrade button */}
-            <Button variant="accent" size="sm" className="hidden sm:flex">
-              <Crown className="w-4 h-4 mr-2" />
-              Upgrade
-            </Button>
+                    {/* Upgrade button */}
+                    <Button variant="accent" size="sm" className="hidden sm:flex">
+                      <Crown className="w-4 h-4 mr-2" />
+                      Upgrade
+                    </Button>
 
-            {/* Get Started button */}
-            <Button variant="brutal" size="sm" className="font-black">
-              <span className="hidden sm:inline">GET STARTED</span>
-              <span className="sm:hidden">START</span>
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </Button>
+                    {/* Sign Out button */}
+                    <Button variant="outline" size="sm" onClick={signOut} className="font-black">
+                      <LogOut className="w-4 h-4 sm:mr-2" />
+                      <span className="hidden sm:inline">SIGN OUT</span>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    {/* Sign In button */}
+                    <Button variant="outline" size="sm" asChild className="font-black">
+                      <Link to="/auth">
+                        <LogIn className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">SIGN IN</span>
+                      </Link>
+                    </Button>
+
+                    {/* Get Started button */}
+                    <Button variant="brutal" size="sm" asChild className="font-black">
+                      <Link to="/auth">
+                        <span className="hidden sm:inline">GET STARTED</span>
+                        <span className="sm:hidden">START</span>
+                        <ChevronRight className="w-4 h-4 ml-1" />
+                      </Link>
+                    </Button>
+                  </>
+                )}
+              </>
+            )}
 
             {/* Mobile menu button */}
             <Button variant="outline" size="sm" className="lg:hidden font-black" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -81,10 +117,36 @@ export function Header() {
                 <div className="sm:hidden">
                   <TransformationHistory />
                 </div>
-                <Button variant="accent" size="sm" className="justify-start">
-                  <Crown className="w-4 h-4 mr-2" />
-                  Upgrade to Pro
-                </Button>
+                
+                {!isLoading && (
+                  <>
+                    {user ? (
+                      <>
+                        <div className="flex items-center gap-2 text-sm md:hidden">
+                          <User className="w-4 h-4" />
+                          <span className="font-medium truncate">
+                            {user.email}
+                          </span>
+                        </div>
+                        <Button variant="accent" size="sm" className="justify-start">
+                          <Crown className="w-4 h-4 mr-2" />
+                          Upgrade to Pro
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={signOut} className="justify-start">
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Sign Out
+                        </Button>
+                      </>
+                    ) : (
+                      <Button variant="brutal" size="sm" asChild className="justify-start">
+                        <Link to="/auth">
+                          <LogIn className="w-4 h-4 mr-2" />
+                          Sign In / Get Started
+                        </Link>
+                      </Button>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>}
